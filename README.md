@@ -1,3 +1,18 @@
+---
+layout: post
+title:  "Adding Javascript "
+date:   2016-12-22 16:32:39 -0400
+jsarr:
+- javascript/jswhat.js
+categories: Javascript
+---
+
+{% for js in page.jsarr %}
+ <script type="text/javascript">
+  {% include {{ js }} %}
+ </script>
+{% endfor %}
+
 ## Welcome to GitHub Pages
 
 You can use the [editor on GitHub](https://github.com/PiDayDev/jswhat/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
