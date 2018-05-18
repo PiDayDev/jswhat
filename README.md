@@ -6,8 +6,6 @@ Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://j
 
 ### Test
 
-{% javascript jswhat.js %}
-
 {% asset jswhat.js %}
 
 ### Markdown
