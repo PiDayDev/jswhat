@@ -7,11 +7,7 @@ jsarr:
 categories: Javascript
 ---
 
-{% for js in page.jsarr %}
- <script type="text/javascript">
-  {% include {{ js }} %}
- </script>
-{% endfor %}
+
 
 ## Welcome to GitHub Pages 1.2.3
 
