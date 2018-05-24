@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS what?</title>
+  <script type="text/javascript">
+    function get(id) {
+      return eval(document.getElementById(id).value);
+    }
+    function set(id, value) {
+      document.getElementById(id).value = value;
+    }
+    function magic(event) {
+      event.preventDefault();
+      var value = get('expr');
+      set('isNull', value==null);
+    }
+  </script>
+</head>
+<body>
+  <div style="width:500px;top:200px;margin: auto;">
+
+    <form onsubmit="magic(event)" target="_self">
+      <input type="text" name="expr" id="expr">
+      <button type="submit" >Clic</button>
+    </form>
+    <hr>
+    == null ? <input type="text" id="isNull" readonly>
+    <br>
+  </div>
+</body>
+</html>
