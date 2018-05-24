@@ -5,28 +5,98 @@
   <title>JS what?</title>
   <script type="text/javascript">
     function get(id) {
-      return eval(document.getElementById(id).value);
+      return document.getElementById(id).value;
     }
-    function set(id, value) {
-      document.getElementById(id).value = value;
+
+    let getFields = function () {
+      return [...document.getElementsByClassName('result')];
+    };
+
+    let getExpression = function (field) {
+      return field.getAttribute('data-compare');
+    };
+
+    function set() {
+      const fields = getFields();
+      const expr = get('expr');
+      fields.forEach((field) => {
+        try {
+          field.value = eval(expr + getExpression(field));
+        }catch (e) {
+          field.value = "pota";
+        }
+      });
     }
     function magic(event) {
       event.preventDefault();
-      var value = get('expr');
-      set('isNull', value==null);
+      set();
+    }
+    function label() {
+      getFields().forEach((field) => field.parentNode.children[0].prepend(getExpression(field)));
     }
   </script>
+  <style type="text/css">
+    body {
+      font-family: monospace;
+    }
+    .container {
+      width: 50%;
+      display: flex;
+    }
+    .container span,.container input{
+      width: 50%;
+      padding: 10px;
+      margin: 4px;
+    }
+    form input {
+      padding: 10px;
+      margin: 4px;
+    }
+    form div {
+      margin: auto;
+      width: 50%;
+      padding: auto;
+      align-content: center;
+      alignment: center;
+      text-align: center;
+    }
+    .results {
+      display: flex;
+      flex-wrap: wrap
+    }
+  </style>
 </head>
-<body>
-  <div style="width:500px;top:200px;margin: auto;">
+<body onload="label()">
+  <div style="width:800px;top:200px;margin: auto;">
 
-    <form onsubmit="magic(event)" target="_self">
-      <input type="text" name="expr" id="expr">
-      <button type="submit" >Clic</button>
+    <form onsubmit="return false;">
+      <div>
+        <input type="text" name="expr" id="expr" onchange="magic(event)">
+      </div>
     </form>
     <hr>
-    == null ? <input type="text" id="isNull" readonly>
-    <br>
+    <div class="results">
+    <div class="container"><span>?</span> <input type="text" data-compare=" == null" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === null" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == undefined" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === undefined" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == 0" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === 0" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == '0'" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === '0'" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == ''" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === ''" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == []" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === []" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == {}" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === {}" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == NaN" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === NaN" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == true" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === true" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" == false" readonly disabled class="result"></div>
+    <div class="container"><span>?</span> <input type="text" data-compare=" === false" readonly disabled class="result"></div>
+    </div>
   </div>
 </body>
 </html>
