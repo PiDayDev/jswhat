@@ -4,54 +4,67 @@
   <meta charset="UTF-8">
   <title>JS what?</title>
   <script type="text/javascript">
-    function get(id) {
-      return document.getElementById(id).value;
-    }
 
-    let getFields = function () {
-      return [...document.getElementsByClassName('result')];
+    let getContainers = function () {
+      return [...document.getElementsByClassName('container')].map(c => ({
+        expression: c.querySelector('.expression').innerText,
+        element: c
+      }));
     };
 
-    let getExpression = function (field) {
-      return field.getAttribute('data-compare');
-    };
-
-    function set() {
-      const fields = getFields();
-      const expr = get('expr');
-      fields.forEach((field) => {
-        try {
-          field.value = eval(expr + getExpression(field));
-        }catch (e) {
-          field.value = "pota";
-        }
+    function applyExpressions() {
+      const containers = getContainers();
+      const testedValue = document.getElementById('testedValue').value;
+      containers.forEach(({expression, element}) => {
+        setResult(element, compute(testedValue + expression));
       });
     }
+
+    function compute(expression) {
+      try {
+        return eval(expression);
+      } catch (e) {
+        return '¯\\_(ツ)_/¯';
+      }
+    }
+
+    function setResult(element, value) {
+      let css = 'none';
+      if (value===true) {
+        css = 'yes';
+      } else if (value===false) {
+        css = 'no';
+      }
+      element.querySelector('span:last-child').className = css;
+    }
+
     function magic(event) {
       event.preventDefault();
-      set();
-    }
-    function label() {
-      getFields().forEach((field) => field.parentNode.children[0].prepend(getExpression(field)));
+      applyExpressions();
     }
   </script>
   <style type="text/css">
     body {
       font-family: monospace;
     }
+
     .container {
       width: 50%;
       display: flex;
     }
-    .container span,.container input{
+
+    .container span, .container input {
       width: 50%;
+      height: 48px;
       padding: 10px;
       margin: 4px;
     }
+
     form input {
       padding: 10px;
       margin: 4px;
     }
+
     form div {
       margin: auto;
       width: 50%;
@@ -60,43 +73,59 @@
       alignment: center;
       text-align: center;
     }
+
     .results {
       display: flex;
       flex-wrap: wrap
     }
+
+    .yes,.no,.none {
+      background-repeat: no-repeat;
+    }
+    .yes {
+      background-image: url('assets/yes.png');
+    }
+    .no {
+      background-image: url('assets/no.png');
+    }
+    .none {
+      background-image: url('assets/none.png');
+    }
   </style>
 </head>
-<body onload="label()">
-  <div style="width:800px;top:200px;margin: auto;">
+<body>
+<div style="width:800px;top:200px;margin: auto;">
 
-    <form onsubmit="return false;">
-      <div>
-        <input type="text" name="expr" id="expr" onchange="magic(event)">
-      </div>
-    </form>
-    <hr>
-    <div class="results">
-    <div class="container"><span>?</span> <input type="text" data-compare=" == null" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === null" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == undefined" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === undefined" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == 0" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === 0" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == '0'" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === '0'" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == ''" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === ''" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == []" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === []" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == {}" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === {}" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == NaN" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === NaN" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == true" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === true" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" == false" readonly disabled class="result"></div>
-    <div class="container"><span>?</span> <input type="text" data-compare=" === false" readonly disabled class="result"></div>
+  <form onsubmit="return false;">
+    <div>
+      Is... <input type="text"
+                   id="testedValue"
+                   onchange="magic(event)">
     </div>
+  </form>
+  <hr>
+  <div class="results">
+    <div class="container"><span class="expression">== null</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== null</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== undefined</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== undefined</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== 0</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== 0</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== '0'</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== '0'</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== ''</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== ''</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== []</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== []</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== {}</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== {}</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== NaN</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== NaN</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== true</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== true</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">== false</span> <span>?</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="expression">=== false</span> <span>?</span> <span class="placeholder"> </span> </div>
   </div>
+</div>
 </body>
 </html>
