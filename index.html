@@ -6,17 +6,22 @@
   <script type="text/javascript">
 
     let getContainers = function () {
-      return [...document.getElementsByClassName('container')].map(c => ({
-        expression: c.querySelector('.expression').innerText,
-        element: c
-      }));
+      return [...document.getElementsByClassName('container')].map(c => {
+          let prefix = c.querySelector('.prefix');
+          let expression = c.querySelector('.expression');
+          return ({
+              prefix: prefix ? prefix.innerText : '',
+              expression: expression ? expression.innerText : '',
+              element: c
+          });
+      });
     };
 
     function applyExpressions() {
       const containers = getContainers();
       const testedValue = document.getElementById('testedValue').value;
-      containers.forEach(({expression, element}) => {
-        setResult(element, compute(testedValue + expression));
+      containers.forEach(({prefix, expression, element}) => {
+        setResult(element, compute(prefix + testedValue + expression));
       });
     }
 
@@ -59,7 +64,10 @@
       padding: 10px;
       margin: 4px;
     }
-
+    .container span:last-child {
+      width: 60px;
+      flex-shrink: 0;
+    }
     form input {
       padding: 10px;
       margin: 4px;
@@ -105,6 +113,8 @@
   </form>
   <hr>
   <div class="results">
+    <div class="container"><span class="prefix">!!(</span><span>..</span><span class="expression">)</span> <span>? [if(...)]</span> <span class="placeholder"> </span> </div>
+    <div class="container"><span class="prefix">!(</span><span>..</span><span class="expression">)</span> <span>? [if(!...)]</span> <span class="placeholder"> </span> </div>
     <div class="container"><span class="expression">== null</span> <span>?</span> <span class="placeholder"> </span> </div>
     <div class="container"><span class="expression">=== null</span> <span>?</span> <span class="placeholder"> </span> </div>
     <div class="container"><span class="expression">== undefined</span> <span>?</span> <span class="placeholder"> </span> </div>
