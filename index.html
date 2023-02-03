@@ -21,7 +21,7 @@
       const containers = getContainers();
       const testedValue = document.getElementById('testedValue').value;
       containers.forEach(({prefix, expression, element}) => {
-        setResult(element, compute(prefix + testedValue + expression));
+        setResult(element, compute("( "+prefix +" "+ testedValue +" "+ expression+" )"));
       });
     }
 
